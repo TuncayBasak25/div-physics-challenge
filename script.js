@@ -20,23 +20,27 @@ function startPhysics(div) {
   actualdiv.update = function() {
     this.style.left = String(mouseX - this.offsetX) + "px";
     this.style.top = String(mouseY - this.offsetY) + "px";
-    this.style.transform = "rotate(" + this.angle + "deg)";
 
-    console.log(this.angleSpeed);
+    this.centerX = (this.getBoundingClientRect().x + this.getBoundingClientRect().right)/2;
+    this.centerY = (this.getBoundingClientRect().y + this.getBoundingClientRect().bottom)/2;
+
     this.angle += this.angleSpeed;
-    this.angleSpeed *= 0.9;
+    this.angleSpeed *= 0.92;
 
     this.style.transformOrigin = this.offsetX + "px " + this.offsetY + "px";
 
     this.centerX = (this.getBoundingClientRect().x + this.getBoundingClientRect().right)/2;
     this.centerY = (this.getBoundingClientRect().y + this.getBoundingClientRect().bottom)/2;
 
-    if (mouseX !== this.centerX) this.angleSpeed += (this.centerX - mouseX)/400;
-
-    if (mouseX !== mouseTrace[0].x && mouseY !== this.center) this.angleSpeed -= (mouseTrace[0].x - mouseX) * Math.abs(mouseY - this.centerY)/1000;
-    if (mouseY !== mouseTrace[0].y && mouseX !== this.center) this.angleSpeed -= (mouseTrace[0].y - mouseY) * Math.abs(mouseX - this.centerX)/1000;
+    let omega = 0;
+    if (mouseX !== mouseTrace[0].x && mouseY !== this.center) this.angle -= (mouseTrace[0].x - mouseX) * Math.abs(mouseY - this.centerY)/5000;
+    if (mouseY !== mouseTrace[0].y && mouseX !== this.center) this.angle -= (mouseTrace[0].y - mouseY) * Math.abs(mouseX - this.centerX)/5000;
     mouseTrace[0].x = mouseX;
     mouseTrace[0].y = mouseY;
+
+    if (mouseX !== this.centerX) this.angleSpeed += (this.centerX - mouseX)/400 + omega;
+
+    this.style.transform = "rotate(" + this.angle + "deg)";
   }
 
   actualdiv.setAttribute('onmouseup', 'endPhysics()');
